@@ -1,0 +1,39 @@
+
+
+python -m verl.trainer.main_ppo \
+data.train_files=./data/countdown/train.parquet \
+data.val_files=./data/countdown/test.parquet \
+data.train_batch_size=128 \
+algorithm.adv_estimator=grpo \
+actor_rollout_ref.actor.importance_sampling=False \
+actor_rollout_ref.actor.clipping=False \
+data.val_batch_size=128 \
+actor_rollout_ref.actor.raft=True \
+data.max_prompt_length=256 \
+data.max_response_length=1024 \
+actor_rollout_ref.model.path=Qwen/Qwen2.5-7B \
+actor_rollout_ref.model.use_remove_padding=True \
+actor_rollout_ref.actor.use_dynamic_bsz=False \
+actor_rollout_ref.actor.optim.lr=1e-6 \
+actor_rollout_ref.rollout.n=8 \
+actor_rollout_ref.actor.ppo_mini_batch_size=128 \
+actor_rollout_ref.actor.ppo_micro_batch_size=4 \
+actor_rollout_ref.rollout.log_prob_micro_batch_size=4 \
+actor_rollout_ref.rollout.tensor_model_parallel_size=1 \
+actor_rollout_ref.rollout.gpu_memory_utilization=0.8 \
+actor_rollout_ref.ref.log_prob_micro_batch_size=4 \
+critic.optim.lr=1e-5 \
+critic.model.path=Qwen/Qwen2.5-7B \
+critic.ppo_micro_batch_size=4 \
+algorithm.kl_ctrl.kl_coef=0.0 \
+trainer.logger=['wandb'] \
++trainer.val_before_train=True \
+trainer.default_hdfs_dir=null \
+trainer.n_gpus_per_node=4 \
+trainer.nnodes=1 \
+trainer.save_freq=100 \
+trainer.test_freq=100 \
+trainer.project_name=TinyZero_Final \
+trainer.experiment_name=verl_countdown_GRPO_onpolicy_nrollout8_noformat \
+trainer.default_local_dir=/datadrive3/samyak/reasoning_checkpoints/checkpoints/verl_countdown_GRPO_onpolicy_nrollout8_noformat \
+trainer.total_epochs=15 2>&1 | tee verl_grpo.log
